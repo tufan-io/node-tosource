@@ -1,6 +1,5 @@
 var toSource = require('./tosource')
 var assert = require('assert')
-var Sequelize = require('sequelize');
 
 // Various types
 var date = new Date()
