@@ -1,5 +1,6 @@
 var toSource = require('./tosource')
 var assert = require('assert')
+var Sequelize = require('sequelize');
 
 // Various types
 var date = new Date()
@@ -59,6 +60,7 @@ assert.equal(
 assert.equal(
   toSource(
     [ 4, 5, 6, { bar: 3 } ],
+    null,
     function numbersToStrings (value) {
       return typeof value === 'number' ? '<' + value + '>' : value
     }
@@ -71,7 +73,7 @@ assert.equal(
 
 // No indent
 assert.equal(
-  toSource([ 4, 5, 6, { bar: 3 } ], null, false),
+  toSource([ 4, 5, 6, { bar: 3 } ], null, null, false),
   '[4,5,6,{bar:3}]'
 )
 
@@ -95,3 +97,12 @@ assert.equal(
   '{ a:{},\n' +
   '  b:{} }'
 )
+
+// mytest
+
+var object = {
+  id: {
+    type: " Sequelize.STRING"
+  }
+}
+console.log('mytest - ' + toSource(object, {ignore: ['type']}));

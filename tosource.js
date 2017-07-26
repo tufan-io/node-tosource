@@ -1,11 +1,17 @@
 /* toSource by Marcello Bastea-Forte - zlib license */
-module.exports = function (object, filter, indent, startingIndent) {
+module.exports = function (object, options, filter, indent, startingIndent) {
   var seen = []
-  return walk(object, filter, indent === undefined ? '  ' : (indent || ''), startingIndent || '', seen)
+  return walk(object, filter, indent === undefined ? '  ' : (indent || ''), startingIndent || '', seen, null, options)
 
-  function walk (object, filter, indent, currentIndent, seen) {
+  function walk (object, filter, indent, currentIndent, seen, key, options) {
     var nextIndent = currentIndent + indent
     object = filter ? filter(object) : object
+
+    if (key && options && options.ignore) {
+      if (options.ignore.indexOf(key) > -1) {
+        return object.toString();
+      }
+    }
 
     switch (typeof object) {
       case 'string':
@@ -45,7 +51,7 @@ module.exports = function (object, filter, indent, startingIndent) {
     }
     var keys = Object.keys(object)
     return keys.length ? '{' + join(keys.map(function (key) {
-      return (legalKey(key) ? key : JSON.stringify(key)) + ':' + walk(object[key], filter, indent, nextIndent, seen.slice())
+      return (legalKey(key) ? key : JSON.stringify(key)) + ':' + walk(object[key], filter, indent, nextIndent, seen.slice(), key, options)
     })) + '}' : '{}'
   }
 }
